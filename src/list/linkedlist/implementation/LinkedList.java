@@ -81,4 +81,109 @@ public class LinkedList {
         return str.append("]").toString();
     }
 
+    public Object removeFirst() {
+        Node temp = head;
+        head = temp.next;
+        Object tempData = temp.data;
+        temp = null;
+        size--;
+        return tempData;
+    }
+
+    public Object remove(int k) {
+        if (k == 0) {
+            return removeFirst();
+        }
+
+        Node prev = node(k - 1);
+        Node temp = prev.next;
+        prev.next = temp.next;
+        Object tempData = temp.data;
+        if (tail == temp) {
+            tail = prev;
+        }
+        temp = null;
+        size--;
+
+        return tempData;
+    }
+
+    public Object removeLast() {
+        return remove(size - 1);
+    }
+
+    public int size() {
+        return size;
+    }
+
+    public Object get(int k) {
+        return node(k);
+    }
+
+    public int indexOf(Object data) {
+        Node temp = head;
+        int index = 0;
+
+        while (temp.data != data) {
+            temp = temp.next;
+            index++;
+            if (temp == null) {
+                return -1;
+            }
+        }
+        return index;
+    }
+
+    public ListIterator listIterator() {
+        return new ListIterator();
+    }
+
+    public class ListIterator {
+        private Node next;
+        private Node lastReturned;
+        private int nextIndex = 0;
+
+        ListIterator() {
+            next = head;
+        }
+
+        public Object next() {
+            lastReturned = next;
+            next = next.next;
+            nextIndex++;
+            return lastReturned.data;
+        }
+
+        public boolean hasNext() {
+            return nextIndex < size;
+        }
+
+        public void add(Object input) {
+            Node newNode = new Node(input);
+
+            if (lastReturned == null) {
+                head = newNode;
+                newNode.next = next;
+            } else {
+                lastReturned.next = newNode;
+                newNode.next = next;
+            }
+
+            lastReturned = newNode;
+            nextIndex++;
+            size++;
+        }
+
+        public void remove() {
+            if (nextIndex == 0) {
+                throw new IllegalStateException();
+            }
+            LinkedList.this.remove(nextIndex - 1);
+            nextIndex--;
+        }
+
+
+    }
+
+
 }
